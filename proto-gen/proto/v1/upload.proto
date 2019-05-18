@@ -1,0 +1,24 @@
+syntax = "proto3";
+package v1;
+
+import "google/protobuf/timestamp.proto";
+
+enum UploadStatusCode {
+  Unknown = 0;
+  Ok = 1;
+  Failed = 2;
+}
+
+message File {
+  bytes content = 1;
+}
+
+message UploadStatusResponse {
+  string api = 1;
+  string Message = 2;
+  UploadStatusCode Code = 3;
+}
+
+service UploadService {
+  rpc Upload(stream File) returns (UploadStatusResponse);
+}
