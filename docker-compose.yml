@@ -13,3 +13,17 @@ services:
       - type: bind
         target: ${PROTO_BUILD_PATH}
         source: ./proto-gen${PROTO_BUILD_PATH}
+  lazy-panda-upload-server:
+    build:
+      context: .
+      args:
+        - APP_SRC=${APP_SRC}
+        - MODS=${MODS}
+        - BUILD_FILE=${BUILD_FILE}
+    command: sh -c "cp -r ${MODS}/. ${APP_SRC} && /${BUILD_FILE} --port=${PORT}"
+    volumes:
+      - type: bind
+        target: ${APP_SRC}
+        source: ./app
+    ports:
+      - "${PORT}:${PORT}"
