@@ -7,7 +7,6 @@ import (
 	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/golang/protobuf/ptypes/timestamp"
 	grpc "google.golang.org/grpc"
 	math "math"
 )
@@ -51,43 +50,248 @@ func (UploadStatusCode) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_91b94b655bd2a7e5, []int{0}
 }
 
-type File struct {
-	Content              []byte   `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+type UploadRequest struct {
+	Api                  string   `protobuf:"bytes,1,opt,name=api,proto3" json:"api,omitempty"`
+	Filename             string   `protobuf:"bytes,2,opt,name=filename,proto3" json:"filename,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *File) Reset()         { *m = File{} }
-func (m *File) String() string { return proto.CompactTextString(m) }
-func (*File) ProtoMessage()    {}
-func (*File) Descriptor() ([]byte, []int) {
+func (m *UploadRequest) Reset()         { *m = UploadRequest{} }
+func (m *UploadRequest) String() string { return proto.CompactTextString(m) }
+func (*UploadRequest) ProtoMessage()    {}
+func (*UploadRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_91b94b655bd2a7e5, []int{0}
 }
 
-func (m *File) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_File.Unmarshal(m, b)
+func (m *UploadRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UploadRequest.Unmarshal(m, b)
 }
-func (m *File) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_File.Marshal(b, m, deterministic)
+func (m *UploadRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UploadRequest.Marshal(b, m, deterministic)
 }
-func (m *File) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_File.Merge(m, src)
+func (m *UploadRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UploadRequest.Merge(m, src)
 }
-func (m *File) XXX_Size() int {
-	return xxx_messageInfo_File.Size(m)
+func (m *UploadRequest) XXX_Size() int {
+	return xxx_messageInfo_UploadRequest.Size(m)
 }
-func (m *File) XXX_DiscardUnknown() {
-	xxx_messageInfo_File.DiscardUnknown(m)
+func (m *UploadRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UploadRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_File proto.InternalMessageInfo
+var xxx_messageInfo_UploadRequest proto.InternalMessageInfo
 
-func (m *File) GetContent() []byte {
+func (m *UploadRequest) GetApi() string {
 	if m != nil {
-		return m.Content
+		return m.Api
+	}
+	return ""
+}
+
+func (m *UploadRequest) GetFilename() string {
+	if m != nil {
+		return m.Filename
+	}
+	return ""
+}
+
+type UploadFileRequest struct {
+	// Types that are valid to be assigned to FileData:
+	//	*UploadFileRequest_Content
+	//	*UploadFileRequest_Meta
+	FileData             isUploadFileRequest_FileData `protobuf_oneof:"fileData"`
+	XXX_NoUnkeyedLiteral struct{}                     `json:"-"`
+	XXX_unrecognized     []byte                       `json:"-"`
+	XXX_sizecache        int32                        `json:"-"`
+}
+
+func (m *UploadFileRequest) Reset()         { *m = UploadFileRequest{} }
+func (m *UploadFileRequest) String() string { return proto.CompactTextString(m) }
+func (*UploadFileRequest) ProtoMessage()    {}
+func (*UploadFileRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_91b94b655bd2a7e5, []int{1}
+}
+
+func (m *UploadFileRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UploadFileRequest.Unmarshal(m, b)
+}
+func (m *UploadFileRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UploadFileRequest.Marshal(b, m, deterministic)
+}
+func (m *UploadFileRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UploadFileRequest.Merge(m, src)
+}
+func (m *UploadFileRequest) XXX_Size() int {
+	return xxx_messageInfo_UploadFileRequest.Size(m)
+}
+func (m *UploadFileRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UploadFileRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UploadFileRequest proto.InternalMessageInfo
+
+type isUploadFileRequest_FileData interface {
+	isUploadFileRequest_FileData()
+}
+
+type UploadFileRequest_Content struct {
+	Content []byte `protobuf:"bytes,1,opt,name=content,proto3,oneof"`
+}
+
+type UploadFileRequest_Meta struct {
+	Meta *Metadata `protobuf:"bytes,2,opt,name=meta,proto3,oneof"`
+}
+
+func (*UploadFileRequest_Content) isUploadFileRequest_FileData() {}
+
+func (*UploadFileRequest_Meta) isUploadFileRequest_FileData() {}
+
+func (m *UploadFileRequest) GetFileData() isUploadFileRequest_FileData {
+	if m != nil {
+		return m.FileData
 	}
 	return nil
+}
+
+func (m *UploadFileRequest) GetContent() []byte {
+	if x, ok := m.GetFileData().(*UploadFileRequest_Content); ok {
+		return x.Content
+	}
+	return nil
+}
+
+func (m *UploadFileRequest) GetMeta() *Metadata {
+	if x, ok := m.GetFileData().(*UploadFileRequest_Meta); ok {
+		return x.Meta
+	}
+	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*UploadFileRequest) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _UploadFileRequest_OneofMarshaler, _UploadFileRequest_OneofUnmarshaler, _UploadFileRequest_OneofSizer, []interface{}{
+		(*UploadFileRequest_Content)(nil),
+		(*UploadFileRequest_Meta)(nil),
+	}
+}
+
+func _UploadFileRequest_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*UploadFileRequest)
+	// fileData
+	switch x := m.FileData.(type) {
+	case *UploadFileRequest_Content:
+		b.EncodeVarint(1<<3 | proto.WireBytes)
+		b.EncodeRawBytes(x.Content)
+	case *UploadFileRequest_Meta:
+		b.EncodeVarint(2<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Meta); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("UploadFileRequest.FileData has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _UploadFileRequest_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*UploadFileRequest)
+	switch tag {
+	case 1: // fileData.content
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		x, err := b.DecodeRawBytes(true)
+		m.FileData = &UploadFileRequest_Content{x}
+		return true, err
+	case 2: // fileData.meta
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Metadata)
+		err := b.DecodeMessage(msg)
+		m.FileData = &UploadFileRequest_Meta{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _UploadFileRequest_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*UploadFileRequest)
+	// fileData
+	switch x := m.FileData.(type) {
+	case *UploadFileRequest_Content:
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(len(x.Content)))
+		n += len(x.Content)
+	case *UploadFileRequest_Meta:
+		s := proto.Size(x.Meta)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
+}
+
+type Metadata struct {
+	Auth                 string   `protobuf:"bytes,1,opt,name=auth,proto3" json:"auth,omitempty"`
+	FileName             string   `protobuf:"bytes,2,opt,name=fileName,proto3" json:"fileName,omitempty"`
+	FileType             string   `protobuf:"bytes,3,opt,name=fileType,proto3" json:"fileType,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Metadata) Reset()         { *m = Metadata{} }
+func (m *Metadata) String() string { return proto.CompactTextString(m) }
+func (*Metadata) ProtoMessage()    {}
+func (*Metadata) Descriptor() ([]byte, []int) {
+	return fileDescriptor_91b94b655bd2a7e5, []int{2}
+}
+
+func (m *Metadata) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Metadata.Unmarshal(m, b)
+}
+func (m *Metadata) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Metadata.Marshal(b, m, deterministic)
+}
+func (m *Metadata) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Metadata.Merge(m, src)
+}
+func (m *Metadata) XXX_Size() int {
+	return xxx_messageInfo_Metadata.Size(m)
+}
+func (m *Metadata) XXX_DiscardUnknown() {
+	xxx_messageInfo_Metadata.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Metadata proto.InternalMessageInfo
+
+func (m *Metadata) GetAuth() string {
+	if m != nil {
+		return m.Auth
+	}
+	return ""
+}
+
+func (m *Metadata) GetFileName() string {
+	if m != nil {
+		return m.FileName
+	}
+	return ""
+}
+
+func (m *Metadata) GetFileType() string {
+	if m != nil {
+		return m.FileType
+	}
+	return ""
 }
 
 type UploadStatusResponse struct {
@@ -103,7 +307,7 @@ func (m *UploadStatusResponse) Reset()         { *m = UploadStatusResponse{} }
 func (m *UploadStatusResponse) String() string { return proto.CompactTextString(m) }
 func (*UploadStatusResponse) ProtoMessage()    {}
 func (*UploadStatusResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b94b655bd2a7e5, []int{1}
+	return fileDescriptor_91b94b655bd2a7e5, []int{3}
 }
 
 func (m *UploadStatusResponse) XXX_Unmarshal(b []byte) error {
@@ -147,29 +351,36 @@ func (m *UploadStatusResponse) GetCode() UploadStatusCode {
 
 func init() {
 	proto.RegisterEnum("v1.UploadStatusCode", UploadStatusCode_name, UploadStatusCode_value)
-	proto.RegisterType((*File)(nil), "v1.File")
+	proto.RegisterType((*UploadRequest)(nil), "v1.UploadRequest")
+	proto.RegisterType((*UploadFileRequest)(nil), "v1.UploadFileRequest")
+	proto.RegisterType((*Metadata)(nil), "v1.Metadata")
 	proto.RegisterType((*UploadStatusResponse)(nil), "v1.UploadStatusResponse")
 }
 
 func init() { proto.RegisterFile("upload.proto", fileDescriptor_91b94b655bd2a7e5) }
 
 var fileDescriptor_91b94b655bd2a7e5 = []byte{
-	// 239 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x5c, 0x50, 0x5d, 0x6b, 0xc2, 0x30,
-	0x14, 0x5d, 0xaa, 0xd4, 0xed, 0xce, 0x8d, 0x10, 0x7c, 0x08, 0xbe, 0xac, 0xf8, 0x54, 0xf6, 0x50,
-	0x51, 0x7f, 0xc0, 0x1e, 0x06, 0xbe, 0x8d, 0x41, 0x87, 0x3f, 0x20, 0xda, 0xbb, 0x12, 0x8c, 0xb9,
-	0xc1, 0xa4, 0xdd, 0xdf, 0x1f, 0x89, 0x2b, 0x8c, 0xbe, 0xe5, 0x7c, 0xe4, 0x1c, 0xce, 0x85, 0x79,
-	0xe7, 0x0c, 0xa9, 0xa6, 0x72, 0x57, 0x0a, 0x24, 0xb2, 0x7e, 0xb3, 0x7c, 0x69, 0x89, 0x5a, 0x83,
-	0xeb, 0xc4, 0x1c, 0xbb, 0xef, 0x75, 0xd0, 0x17, 0xf4, 0x41, 0x5d, 0xdc, 0xcd, 0xb4, 0x2a, 0x60,
-	0xba, 0xd7, 0x06, 0x85, 0x84, 0xd9, 0x89, 0x6c, 0x40, 0x1b, 0x24, 0x2b, 0x58, 0x39, 0xaf, 0x07,
-	0xb8, 0x32, 0xb0, 0x38, 0xa4, 0xd8, 0xaf, 0xa0, 0x42, 0xe7, 0x6b, 0xf4, 0x8e, 0xac, 0x47, 0xc1,
-	0x61, 0xa2, 0x9c, 0x4e, 0xee, 0x87, 0x3a, 0x3e, 0x63, 0xc6, 0x07, 0x7a, 0xaf, 0x5a, 0x94, 0x59,
-	0x62, 0x07, 0x28, 0x4a, 0x98, 0xbe, 0x53, 0x83, 0x72, 0x52, 0xb0, 0xf2, 0x79, 0xbb, 0xa8, 0xfa,
-	0x4d, 0xf5, 0x3f, 0x33, 0x6a, 0x75, 0x72, 0xbc, 0xee, 0x80, 0x8f, 0x15, 0xf1, 0x08, 0xb3, 0x83,
-	0x3d, 0x5b, 0xfa, 0xb1, 0xfc, 0x4e, 0xe4, 0x90, 0x7d, 0x9e, 0x39, 0x13, 0x00, 0xf9, 0x5e, 0x69,
-	0x83, 0x0d, 0xcf, 0xb6, 0x6f, 0xf0, 0xf4, 0xf7, 0x09, 0xaf, 0xbd, 0x3e, 0xa1, 0xa8, 0x20, 0xbf,
-	0x11, 0xe2, 0x3e, 0x76, 0xc5, 0x85, 0x4b, 0x39, 0x6e, 0x1d, 0x96, 0x94, 0xec, 0x98, 0xa7, 0x63,
-	0xec, 0x7e, 0x03, 0x00, 0x00, 0xff, 0xff, 0x69, 0x93, 0x8e, 0xc2, 0x41, 0x01, 0x00, 0x00,
+	// 308 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x51, 0x41, 0x4f, 0xf2, 0x40,
+	0x10, 0xa5, 0x85, 0x14, 0xbe, 0x81, 0xcf, 0xd4, 0x09, 0x26, 0x0d, 0x27, 0xd3, 0x13, 0xf1, 0x40,
+	0x02, 0x1c, 0x8d, 0x17, 0x35, 0x84, 0x83, 0x68, 0xb2, 0x88, 0x57, 0x33, 0xd2, 0x51, 0x1b, 0xca,
+	0x6e, 0x65, 0xb7, 0x18, 0xff, 0xbd, 0xe9, 0xd6, 0x15, 0xd2, 0x78, 0x9b, 0xf7, 0x5e, 0xfb, 0xe6,
+	0xbd, 0x1d, 0xe8, 0x15, 0x79, 0xa6, 0x28, 0x19, 0xe5, 0x3b, 0x65, 0x14, 0xfa, 0xfb, 0x71, 0x7c,
+	0x05, 0xff, 0x57, 0x96, 0x13, 0xfc, 0x51, 0xb0, 0x36, 0x18, 0x42, 0x93, 0xf2, 0x34, 0xf2, 0xce,
+	0xbd, 0xe1, 0x3f, 0x51, 0x8e, 0x38, 0x80, 0xce, 0x6b, 0x9a, 0xb1, 0xa4, 0x2d, 0x47, 0xbe, 0xa5,
+	0x7f, 0x71, 0xfc, 0x0c, 0xa7, 0xd5, 0xef, 0xb3, 0x34, 0x63, 0x67, 0x31, 0x80, 0xf6, 0x5a, 0x49,
+	0xc3, 0xd2, 0x58, 0x9b, 0xde, 0xbc, 0x21, 0x1c, 0x81, 0x31, 0xb4, 0xb6, 0x6c, 0xc8, 0x1a, 0x75,
+	0x27, 0xbd, 0xd1, 0x7e, 0x3c, 0x5a, 0xb0, 0xa1, 0x84, 0x0c, 0xcd, 0x1b, 0xc2, 0x6a, 0xd7, 0x50,
+	0x2d, 0xbc, 0x25, 0x43, 0xf1, 0x13, 0x74, 0x9c, 0x8e, 0x08, 0x2d, 0x2a, 0xcc, 0xfb, 0x4f, 0x36,
+	0x3b, 0xbb, 0x70, 0xf7, 0xb5, 0x70, 0x25, 0x76, 0xda, 0xe3, 0x57, 0xce, 0x51, 0xf3, 0xa0, 0x95,
+	0x38, 0xce, 0xa0, 0x5f, 0x05, 0x5f, 0x1a, 0x32, 0x85, 0x16, 0xac, 0x73, 0x25, 0x35, 0xff, 0x51,
+	0x3f, 0x82, 0xf6, 0x82, 0xb5, 0xa6, 0x37, 0xb7, 0xc0, 0x41, 0x1c, 0x42, 0xeb, 0x46, 0x25, 0x95,
+	0xf7, 0xc9, 0xa4, 0x5f, 0x76, 0x39, 0xf6, 0x2c, 0x35, 0x61, 0xbf, 0xb8, 0x98, 0x42, 0x58, 0x57,
+	0xb0, 0x0b, 0xed, 0x95, 0xdc, 0x48, 0xf5, 0x29, 0xc3, 0x06, 0x06, 0xe0, 0x3f, 0x6c, 0x42, 0x0f,
+	0x01, 0x82, 0x19, 0xa5, 0x19, 0x27, 0xa1, 0x3f, 0xb9, 0x73, 0xa7, 0x59, 0xf2, 0x6e, 0x9f, 0xae,
+	0x19, 0x2f, 0x21, 0xa8, 0x08, 0x3c, 0x3b, 0xec, 0x3a, 0x7a, 0xf8, 0x41, 0x54, 0x8f, 0xe0, 0x6a,
+	0x0d, 0xbd, 0x97, 0xc0, 0xde, 0x7c, 0xfa, 0x1d, 0x00, 0x00, 0xff, 0xff, 0x02, 0xef, 0xe9, 0x84,
+	0x03, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -205,7 +416,7 @@ func (c *uploadServiceClient) Upload(ctx context.Context, opts ...grpc.CallOptio
 }
 
 type UploadService_UploadClient interface {
-	Send(*File) error
+	Send(*UploadFileRequest) error
 	CloseAndRecv() (*UploadStatusResponse, error)
 	grpc.ClientStream
 }
@@ -214,7 +425,7 @@ type uploadServiceUploadClient struct {
 	grpc.ClientStream
 }
 
-func (x *uploadServiceUploadClient) Send(m *File) error {
+func (x *uploadServiceUploadClient) Send(m *UploadFileRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
@@ -244,7 +455,7 @@ func _UploadService_Upload_Handler(srv interface{}, stream grpc.ServerStream) er
 
 type UploadService_UploadServer interface {
 	SendAndClose(*UploadStatusResponse) error
-	Recv() (*File, error)
+	Recv() (*UploadFileRequest, error)
 	grpc.ServerStream
 }
 
@@ -256,8 +467,8 @@ func (x *uploadServiceUploadServer) SendAndClose(m *UploadStatusResponse) error 
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *uploadServiceUploadServer) Recv() (*File, error) {
-	m := new(File)
+func (x *uploadServiceUploadServer) Recv() (*UploadFileRequest, error) {
+	m := new(UploadFileRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
