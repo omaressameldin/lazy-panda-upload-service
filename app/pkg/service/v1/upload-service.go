@@ -1,12 +1,11 @@
 package v1
 
 import (
-	"fmt"
-	"io"
-	"os"
-	"time"
+	"context"
 
-	v1 "github.com/omaressameldin/lazy-panda-upload-service/pkg/api/v1"
+	writer "github.com/omaressameldin/lazy-panda-upload-service/app/internal/writer"
+	v1 "github.com/omaressameldin/lazy-panda-upload-service/app/pkg/api/v1"
+	uploader "github.com/omaressameldin/lazy-panda-upload-service/app/pkg/uploader"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -17,11 +16,13 @@ const (
 )
 
 // UploadServiceServer is implementation of v1.userServiceServer proto interface
-type UploadServiceServer struct{}
+type UploadServiceServer struct {
+	fileUploader uploader.Uploader
+}
 
 // NewUploadServiceServer creates Upload service
-func NewUploadServiceServer() *UploadServiceServer {
-	return &UploadServiceServer{}
+func NewUploadServiceServer(fileUploader uploader.Uploader) *UploadServiceServer {
+	return &UploadServiceServer{fileUploader}
 }
 
 func uploadFailed(stream v1.UploadService_UploadServer, uploadError error) error {
@@ -39,43 +40,36 @@ func uploadFailed(stream v1.UploadService_UploadServer, uploadError error) error
 
 // Upload new file
 func (s *UploadServiceServer) Upload(stream v1.UploadService_UploadServer) error {
-	filedata, err := stream.Recv()
+	f, err := writer.CreateTmpFile(stream)
 	if err != nil {
 		return uploadFailed(stream, err)
 	}
+	defer writer.DeleteTmp(f)
 
-	f, err := os.Create(fmt.Sprintf(
-		"./app/%s_%v.%s",
-		filedata.GetMeta().GetFileName(),
-		time.Now(),
-		filedata.GetMeta().GetFileType(),
-	))
-	if err != nil {
+	if err = writer.WriteToFile(stream, f); err != nil {
 		return uploadFailed(stream, err)
 	}
 
-	defer f.Close()
-
-	for {
-		filedata, err = stream.Recv()
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			return uploadFailed(stream, err)
-		}
-
-		chunks := filedata.GetContent()
-		_, err = f.Write(chunks)
-		if err != nil {
-			return uploadFailed(stream, err)
-		}
+	if err = s.fileUploader.UploadFile(f.Name()); err != nil {
+		return err
 	}
 
-	err = stream.SendAndClose(&v1.UploadStatusResponse{
+	return stream.SendAndClose(&v1.UploadStatusResponse{
 		Api:     apiVersion,
 		Message: "Upload succeeded",
 		Code:    v1.UploadStatusCode_Ok,
 	})
-	return err
+}
+
+func (s *UploadServiceServer) Delete(
+	ctx context.Context,
+	req *v1.DeleteRequest,
+) (*v1.DeleteResponse, error) {
+	if err := s.fileUploader.DeleteFile(req.Url); err != nil {
+		return nil, status.Error(codes.Unknown, "failed to delete File-> "+err.Error())
+	}
+
+	return &v1.DeleteResponse{
+		Api: apiVersion,
+	}, nil
 }
