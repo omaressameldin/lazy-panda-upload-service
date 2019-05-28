@@ -3,9 +3,9 @@ package v1
 import (
 	"context"
 
-	writer "github.com/omaressameldin/lazy-panda-upload-service/app/internal/writer"
-	v1 "github.com/omaressameldin/lazy-panda-upload-service/app/pkg/api/v1"
-	uploader "github.com/omaressameldin/lazy-panda-upload-service/app/pkg/uploader"
+	writer "github.com/omaressameldin/lazy-panda-upload-service/core/internal/writer"
+	v1 "github.com/omaressameldin/lazy-panda-upload-service/core/pkg/api/v1"
+	uploader "github.com/omaressameldin/lazy-panda-upload-service/core/pkg/uploader"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

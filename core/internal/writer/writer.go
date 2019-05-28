@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	v1 "github.com/omaressameldin/lazy-panda-upload-service/app/pkg/api/v1"
+	v1 "github.com/omaressameldin/lazy-panda-upload-service/core/pkg/api/v1"
 )
 
 const (
