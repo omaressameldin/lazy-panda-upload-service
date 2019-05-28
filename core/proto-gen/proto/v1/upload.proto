@@ -1,0 +1,47 @@
+syntax = "proto3";
+package v1;
+
+enum UploadStatusCode {
+  Unknown = 0;
+  Ok = 1;
+  Failed = 2;
+}
+
+message UploadRequest {
+  string api = 1;
+  string filename = 2;
+}
+
+message UploadFileRequest{
+  oneof fileData {
+    bytes content = 1;
+    Metadata meta = 2;
+  }
+}
+
+message Metadata{
+  string auth = 1;
+  string fileName = 2;
+  string fileType = 3;
+}
+
+message UploadStatusResponse {
+  string api = 1;
+  string url = 2;
+  string Message = 3;
+  UploadStatusCode Code = 4;
+}
+
+message DeleteRequest{
+  string api = 1;
+  string url = 2;
+}
+
+message DeleteResponse{
+  string api = 1;
+}
+
+service UploadService {
+  rpc Upload(stream UploadFileRequest) returns (UploadStatusResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+}

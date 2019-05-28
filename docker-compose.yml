@@ -1,0 +1,27 @@
+version: '3.2'
+services:
+  lazy-panda-proto-gen:
+    image: omaressameldin/proto-gen
+    environment:
+      - BUILD_PATH=${PROTO_BUILD_PATH}
+      - OUTPUT_PATH=${PROTO_OUTPUT_PATH}
+      - FILENAME=${PROTO_FILENAME}
+    volumes:
+      - type: bind
+        target: ${PROTO_OUTPUT_PATH}
+        source: ${CORE_SRC}${PROTO_OUTPUT_PATH}
+      - type: bind
+        target: ${PROTO_BUILD_PATH}
+        source: ${PROTO_SRC}${PROTO_BUILD_PATH}
+  lazy-panda-upload-core:
+    build:
+      context: .
+      args:
+        - APP_SRC=${CORE_SRC}
+        - CODE_SRC=${CODE_SRC}
+        - MODS=${MODS}
+    command: sh -c "cp -r ${MODS}/. ${CORE_SRC}"
+    volumes:
+      - type: bind
+        target: ${CORE_SRC}
+        source: ./core
