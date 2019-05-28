@@ -27,10 +27,21 @@ message Metadata{
 
 message UploadStatusResponse {
   string api = 1;
-  string Message = 2;
-  UploadStatusCode Code = 3;
+  string url = 2;
+  string Message = 3;
+  UploadStatusCode Code = 4;
+}
+
+message DeleteRequest{
+  string api = 1;
+  string url = 2;
+}
+
+message DeleteResponse{
+  string api = 1;
 }
 
 service UploadService {
   rpc Upload(stream UploadFileRequest) returns (UploadStatusResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
 }
