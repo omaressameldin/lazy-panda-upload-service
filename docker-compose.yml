@@ -17,11 +17,10 @@ services:
     build:
       context: .
       args:
-        - APP_SRC=${CORE_SRC}
-        - CODE_SRC=${CODE_SRC}
+        - APP_SRC=${APP_SRC}
         - MODS=${MODS}
     command: sh -c "cp -r ${MODS}/. ${CORE_SRC}"
     volumes:
       - type: bind
-        target: ${CORE_SRC}
-        source: ./core
+        target: ${APP_SRC}
+        source: .
