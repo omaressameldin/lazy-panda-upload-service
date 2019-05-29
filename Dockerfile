@@ -1,15 +1,14 @@
 FROM golang:1.12.4-alpine
 ARG APP_SRC
 ARG MODS
-ARG CODE_SRC
 WORKDIR ${APP_SRC}
 
 RUN apk --update add git ca-certificates
 
-COPY ${CODE_SRC}/go.mod go.sum* ./
+COPY go.mod go.sum* ./
 RUN go mod download
 
-COPY ${CODE_SRC} .
+COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go test ./...
 
 RUN mkdir -p ${MODS}
