@@ -51,7 +51,7 @@ func (s *UploadServiceServer) Upload(stream v1.UploadService_UploadServer) error
 	}
 
 	if err = s.fileUploader.UploadFile(f.Name()); err != nil {
-		return err
+		return uploadFailed(stream, err)
 	}
 
 	return stream.SendAndClose(&v1.UploadStatusResponse{
