@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	tmpPath = "./app"
+	tmpPath = "."
 )
 
 func CreateTmpFile(stream v1.UploadService_UploadServer) (*os.File, error) {

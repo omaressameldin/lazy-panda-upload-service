@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.4'
 services:
   lazy-panda-proto-gen:
     image: omaressameldin/proto-gen
@@ -14,13 +14,26 @@ services:
         target: ${PROTO_BUILD_PATH}
         source: ${PROTO_SRC}${PROTO_BUILD_PATH}
   lazy-panda-upload-core:
+    image: lazy-panda-upload-core
     build:
       context: .
       args:
         - APP_SRC=${APP_SRC}
         - MODS=${MODS}
-    command: sh -c "cp -r ${MODS}/. ${CORE_SRC}"
+        - USER_SVC=${USER_SVC}
+        - USER_SRC=${USER_SRC}
+    command: sh -c "cp -r ${MODS}/. ."
     volumes:
       - type: bind
         target: ${APP_SRC}
         source: .
+  lazy-panda-user-upload:
+    build:
+      context: ${USER_SRC}/.
+      args:
+        - APP_SRC=${APP_SRC}
+        - SVC=${USER_SVC}
+        - CONFIG=${USER_CONFIG}
+    ports:
+      - "${USER_PORT}:${USER_PORT}"
+    command: /${USER_SVC} --port=${USER_PORT} --config=${USER_CONFIG} --bucket=${USER_BUCKET}
