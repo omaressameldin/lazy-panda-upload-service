@@ -20,7 +20,7 @@ Lazy Panda is a project aimed on managing employee time for consulting companies
 **Note2:** The service is not complete so no kind of authorization is implemented!
 
 **Note3:** To be able to test the service you need to have a file to upload!
-- you can check [.core/proto-gen/proto/v1/uploador.proto](.core/proto-gen/proto/v1/uploador.proto) file for available fields
+- you can check [./core/proto-gen/proto/v1/uploador.proto](./core/proto-gen/proto/v1/uploador.proto) file for available fields
 
 - To connect to service:
 ```golang
